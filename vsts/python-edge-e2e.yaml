@@ -1,0 +1,79 @@
+name: $(BuildID)_$(BuildDefinitionName)_$(SourceBranchName) 
+
+variables:
+  hubName: 'iotsdk-python-horton-hub'
+  runCount: $[counter(0,100)]
+
+jobs:
+- job: 'Test'
+
+
+  strategy:
+    maxParallel: 4
+    matrix:
+      linux_edge_py310_mqtt:
+        pv: '3.10'
+        transport: 'mqtt'
+        imageName: 'Ubuntu 20.04'
+        consumerGroup: 'cg6'
+        devicePrefix: "mqtt-py310"
+      linux_edge_py39_maqtt:
+        pv: '3.9'
+        transport: 'mqtt'
+        imageName: 'Ubuntu 20.04'
+        consumerGroup: 'cg5'
+        devicePrefix: "mqtt-py39"
+
+  pool:
+    vmImage: $(imageName)
+
+  variables:
+    deviceId: $(devicePrefix)-$(runCount)
+
+  steps:
+    - task: UsePythonVersion@0
+      inputs:
+        versionSpec: '3.10'
+        architecture: 'x64'
+
+    - script: |
+        cd $(Build.SourcesDirectory)/tests/e2e/edge_setup 
+        ./setup-moby.sh
+        ./setup-iotedge.sh
+      displayName: 'Install IoT Edge'
+
+    - task: AzureCLI@2
+      displayName: Update Azure CLI
+      inputs:
+        azureSubscription: 'ServiceConnectionDemo'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az --version
+          az account show
+          az extension add --name azure-iot 
+
+    - task: AzureCLI@2
+      displayName: Create Edge Device ${{ variables.deviceId }}
+      inputs:
+        azureSubscription: 'ServiceConnectionDemo'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          echo Creating $(deviceId) 
+          az iot hub device-identity create -n $(hubName) --device-id $(deviceId) --edge-enabled
+
+    - task: AzureCLI@2
+      displayName: Remove Edge Device ${{ variables.deviceId }}
+      inputs:
+        azureSubscription: 'ServiceConnectionDemo'
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az iot hub device-identity delete -n $(hubName) --device-id $(deviceId)
+      condition: always()
+
+    - task: PublishTestResults@2
+      displayName: 'Publish Test Results'
+      condition: always()
+
