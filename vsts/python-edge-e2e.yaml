@@ -3,7 +3,7 @@ name: $(BuildID)_$(BuildDefinitionName)_$(SourceBranchName)
 variables:
   hubName: 'iotsdk-python-horton-hub'
   runCount: $[counter(0,100)]
-  containerRegistry: 'iotsdke2e'
+  containerRegistry: iotsdke2e
   credentialFile: $(System.DefaultWorkingDirectory)/creds.json
   manifestFile: $(System.DefaultWorkingDirectory)/manifest.json
   scriptDirectory: $(Build.SourcesDirectory)/tests/e2e/edge_setup 
