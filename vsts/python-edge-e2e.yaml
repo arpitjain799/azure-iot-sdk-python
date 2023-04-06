@@ -3,7 +3,10 @@ name: $(BuildID)_$(BuildDefinitionName)_$(SourceBranchName)
 variables:
   hubName: 'iotsdk-python-horton-hub'
   runCount: $[counter(0,100)]
-  containerRegistry; 'iotsdke2e'
+  containerRegistry: 'iotsdke2e'
+  credentialFile: $(System.DefaultWorkingDirectory)/creds.json
+  manifestFile: $(System.DefaultWorkingDirectory)/manifest.json
+  scriptDirectory: $(Build.SourcesDirectory)/tests/e2e/edge_setup 
 
 jobs:
 - job: 'Test'
@@ -18,12 +21,6 @@ jobs:
         imageName: 'Ubuntu 20.04'
         consumerGroup: 'cg6'
         devicePrefix: "mqtt-py310"
-      linux_edge_py39_maqtt:
-        pv: '3.9'
-        transport: 'mqtt'
-        imageName: 'Ubuntu 20.04'
-        consumerGroup: 'cg5'
-        devicePrefix: "mqtt-py39"
 
   pool:
     vmImage: $(imageName)
@@ -37,8 +34,8 @@ jobs:
         versionSpec: '3.10'
         architecture: 'x64'
 
-    - script: |
-        cd $(Build.SourcesDirectory)/tests/e2e/edge_setup 
+    - bash: |
+        cd $(ScriptDirectory)
         ./setup-moby.sh
         ./setup-iotedge.sh
       displayName: 'Install IoT Edge'
@@ -61,7 +58,7 @@ jobs:
         scriptType: bash
         scriptLocation: inlineScript
         inlineScript: |
-          az acr credential show --name $(containerRegistry) > creds.json
+          az acr credential show --name $(containerRegistry) > $(credentialFile)
 
     - task: AzureCLI@2
       displayName: Create Edge Device ${{ variables.deviceId }}
@@ -72,6 +69,21 @@ jobs:
         inlineScript: |
           echo Creating $(deviceId) 
           az iot hub device-identity create -n $(hubName) --device-id $(deviceId) --edge-enabled &> /dev/null
+
+    - bash: |
+        cd $(ScriptDirectory)
+        ./make_edge_manifest < "$(credentialFile)" > "$(manifestFile)
+      displayName: create deployment manifest
+
+    - task: AzureIoTEdge@2
+      inputs:
+        action: 'Deploy to IoT Edge devices'
+        deploymentFilePath: $(manifestFile)
+        azureSubscription: 'serviceConnectionDemo'
+        iothubname: $(hubName)
+        deviceOption: 'Single Device'
+        deviceId: $(deviceId)
+      displayName: "Deploy to edge device"
 
     - task: AzureCLI@2
       displayName: Remove Edge Device ${{ variables.deviceId }}

@@ -1,4 +1,4 @@
-CREDENTIAL_FILE=${HOME}/temp/creds.json
+CREDENTIAL_FILE=./creds.json
 DOCKER_TAG_EDGE_AGENT=1.4
 DOCKER_TAG_EDGE_HUB=1.4
 
@@ -64,7 +64,8 @@ cat deployment.template.json |\
     jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.image = \"${DOCKER_IMAGE_EDGE_AGENT}\"" |\
     jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" |\
     jq "${PATH_MODULES} = {}" |\
-    jq "${PATH_MODULES}.foo = ${EMPTY_MODULE_BLOCK}" |\
+    jq "${PATH_MODULES}.testMod = ${EMPTY_MODULE_BLOCK}" |\
+    jq "${PATH_MODULES}.testMod.settings.image = \"${REGISTRY_ADDRESS}/default-friend-module:64-v2\"" |\
     jq "${PATH_REGISTRY_CREDENTIALS} = ${REGISTRY_BLOCK}" |\
     jq "${PATH_ROUTES} = ${ROUTE_BLOCK}" 
 
