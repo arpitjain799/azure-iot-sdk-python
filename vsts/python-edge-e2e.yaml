@@ -35,11 +35,12 @@ jobs:
         architecture: 'x64'
 
     - task: Bash@3
-      targetType: script
-      script: |
-        cd $(ScriptDirectory)
-        ./setup-moby.sh
-        ./setup-iotedge.sh
+      inputs:
+        targetType: script
+        script: |
+          cd $(ScriptDirectory)
+          ./setup-moby.sh
+          ./setup-iotedge.sh
       displayName: 'Install IoT Edge'
 
     - task: AzureCLI@2
@@ -73,10 +74,11 @@ jobs:
           az iot hub device-identity create -n $(hubName) --device-id $(deviceId) --edge-enabled &> /dev/null
 
     - task: Bash@3
-      targetType: script
-      script: |
-        cd $(ScriptDirectory)
-        ./make-edge-manifest < "$(credentialFile)" > "$(manifestFile)
+      inputs:
+        targetType: script
+        script: |
+          cd $(ScriptDirectory)
+          ./make-edge-manifest < "$(credentialFile)" > "$(manifestFile)
       displayName: create deployment manifest
 
     - task: AzureIoTEdge@2
@@ -90,10 +92,11 @@ jobs:
       displayName: "Deploy to edge device"
 
     - task: Bash@3
-      targetType: script
-      script: |
-        cd $(ScriptDirectory)
-        ./wait-for-container testMod
+      inputs:
+        targetType: script
+        script: |
+          cd $(ScriptDirectory)
+          ./wait-for-container testMod
       displayName: "wait for container to start"
 
     - task: AzureCLI@2
