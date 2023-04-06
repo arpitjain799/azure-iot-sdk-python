@@ -72,7 +72,7 @@ jobs:
 
     - bash: |
         cd $(ScriptDirectory)
-        ./make_edge_manifest < "$(credentialFile)" > "$(manifestFile)
+        ./make-edge-manifest < "$(credentialFile)" > "$(manifestFile)
       displayName: create deployment manifest
 
     - task: AzureIoTEdge@2
@@ -84,6 +84,11 @@ jobs:
         deviceOption: 'Single Device'
         deviceId: $(deviceId)
       displayName: "Deploy to edge device"
+
+    - task: bash |
+        cd $(ScriptDirectory)
+        ./wait-for-container testMod
+      displayName: "wait for container to start"
 
     - task: AzureCLI@2
       displayName: Remove Edge Device ${{ variables.deviceId }}
