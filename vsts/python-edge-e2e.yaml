@@ -34,7 +34,9 @@ jobs:
         versionSpec: '3.10'
         architecture: 'x64'
 
-    - bash: |
+    - task: Bash@3
+      targetType: script
+      script: |
         cd $(ScriptDirectory)
         ./setup-moby.sh
         ./setup-iotedge.sh
@@ -70,7 +72,9 @@ jobs:
           echo Creating $(deviceId) 
           az iot hub device-identity create -n $(hubName) --device-id $(deviceId) --edge-enabled &> /dev/null
 
-    - bash: |
+    - task: Bash@3
+      targetType: script
+      script: |
         cd $(ScriptDirectory)
         ./make-edge-manifest < "$(credentialFile)" > "$(manifestFile)
       displayName: create deployment manifest
@@ -85,7 +89,9 @@ jobs:
         deviceId: $(deviceId)
       displayName: "Deploy to edge device"
 
-    - task: bash |
+    - task: Bash@3
+      targetType: script
+      script: |
         cd $(ScriptDirectory)
         ./wait-for-container testMod
       displayName: "wait for container to start"
