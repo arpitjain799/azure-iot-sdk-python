@@ -1,18 +1,34 @@
-CREDENTIAL_FILE=./creds.json
+#
+# Scripe to create an IoT Edge deployment manifest from a template file
+#
+
+CREDENTIAL_FILE=$1
+if [ ~ -f ${CREDENTIAL_FILE} ]; then
+    echo "USAGE: $0 <credential file>"
+    exit 1
+fi
+
+#
+# EdgeAgent and EdgeHub image names
+#
 DOCKER_TAG_EDGE_AGENT=1.4
 DOCKER_TAG_EDGE_HUB=1.4
-
 DOCKER_IMAGE_EDGE_AGENT="mcr.microsoft.com/azureiotedge-agent:${DOCKER_TAG_EDGE_AGENT}"
 DOCKER_IMAGE_EDGE_HUB="mcr.microsoft.com/azureiotedge-hub:${DOCKER_TAG_EDGE_HUB}"
 
+#
+# JQuery paths for various fields inside the deployment manifest
+#
 PATH_AGENT_PROPS=".modulesContent[\"\$edgeAgent\"][\"properties.desired\"]"
 PATH_SYSTEM_MODULES="${PATH_AGENT_PROPS}.systemModules"
 PATH_MODULES="${PATH_AGENT_PROPS}.modules"
 PATH_REGISTRY_CREDENTIALS="${PATH_AGENT_PROPS}.runtime.settings.registryCredentials"
-
 PATH_HUB_PROPS=".modulesContent[\"\$edgeHub\"][\"properties.desired\"]"
 PATH_ROUTES="${PATH_HUB_PROPS}.routes"
 
+#
+# JSON for empty module block inside the deployment manifest
+#
 read -d '' EMPTY_MODULE_BLOCK << EOF
 {
   "version": "1.0",
@@ -26,6 +42,9 @@ read -d '' EMPTY_MODULE_BLOCK << EOF
 }
 EOF
 
+#
+# JSON for container retistry credentials
+#
 if [ -e ${CREDENTIAL_FILE} ]; then
     REGISTRY_USERNAME=$(jq -r .username ${CREDENTIAL_FILE})
     REGISTRY_ADDRESS=${REGISTRY_USERNAME}.azurecr.io
@@ -41,6 +60,9 @@ if [ -e ${CREDENTIAL_FILE} ]; then
 EOF
 fi
 
+#
+# function to format a route from a module output to a module input
+#
 function output_to_input_route() {
     OUTPUT_MOD=$1
     OUTPUT_NAME=$2
@@ -52,6 +74,9 @@ function output_to_input_route() {
          "INTO BrokeredEndpoint(\\\\\"/modules/${INPUT_MOD}/inputs/${INPUT_NAME}\\\\\")"
 }
 
+#
+# JSON for the full set of message routes
+#
 read -d '' ROUTE_BLOCK << EOF
 {
     test_to_echo: \"$(output_to_input_route testMod output1 echoMod input1)\",
@@ -60,6 +85,9 @@ read -d '' ROUTE_BLOCK << EOF
 }
 EOF
 
+#
+# Use JQuery to populate the deployment manifest using the variables we set above.
+#
 cat deployment.template.json |\
     jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.image = \"${DOCKER_IMAGE_EDGE_AGENT}\"" |\
     jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" |\
