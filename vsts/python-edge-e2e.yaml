@@ -39,7 +39,7 @@ jobs:
         azureSubscription: 'ServiceConnectionDemo'
         scriptType: bash
         scriptLocation: scriptPath
-        scriptPath: $(scriptDirectory)/isntall-prereqs.sh
+        scriptPath: $(scriptDirectory)/install-prereqs.sh
 
     - task: AzureCLI@2
       displayName: Create and configure edge device ${{ variables.deviceId }}
