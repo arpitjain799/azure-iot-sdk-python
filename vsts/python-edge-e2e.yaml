@@ -34,24 +34,12 @@ jobs:
         architecture: 'x64'
 
     - task: AzureCLI@2
-      displayName: Update Azure CLI
+      displayName: Install Prerequisites
       inputs:
         azureSubscription: 'ServiceConnectionDemo'
         scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          az --version
-          az account show
-          az extension add --name azure-iot 
-
-    - task: Bash@3
-      displayName: 'Install IoT Edge'
-      inputs:
-        targetType: script
-        script: |
-          cd $(ScriptDirectory)
-          ./install-moby.sh
-          ./install-iotedge.sh
+        scriptLocation: scriptPath
+        scriptPath: $(scriptDirectory)/isntall-prereqs.sh
 
     - task: AzureCLI@2
       displayName: Create and configure edge device ${{ variables.deviceId }}
