@@ -72,8 +72,8 @@ jobs:
         targetType: script
         script: |
           cd $(ScriptDirectory)
-          # ./make-edge-manifest < "$(credentialFile)" > "$(manifestFile)"
-          ./make-edge-manifest > "$(manifestFile)"
+          # ./make-edge-manifest.sh < "$(credentialFile)" > "$(manifestFile)"
+          ./make-edge-manifest.sh > "$(manifestFile)"
         
 
     - task: AzureIoTEdge@2
