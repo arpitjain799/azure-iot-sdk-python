@@ -2,11 +2,6 @@
 # Scripe to create an IoT Edge deployment manifest from a template file
 #
 
-CREDENTIAL_FILE=$1
-if [ ~ -f ${CREDENTIAL_FILE} ]; then
-    echo "USAGE: $0 <credential file>"
-    exit 1
-fi
 
 #
 # EdgeAgent and EdgeHub image names
@@ -45,16 +40,12 @@ EOF
 #
 # JSON for container retistry credentials
 #
-if [ -e ${CREDENTIAL_FILE} ]; then
-    REGISTRY_USERNAME=$(jq -r .username ${CREDENTIAL_FILE})
-    REGISTRY_ADDRESS=${REGISTRY_USERNAME}.azurecr.io
-    REGISTRY_PASSWORD=$(jq -r .passwords[0].value ${CREDENTIAL_FILE})
     read -d '' REGISTRY_BLOCK << EOF
     {
-        ${REGISTRY_USERNAME}: { 
-            address: \"${REGISTRY_ADDRESS}\", 
-            username: \"${REGISTRY_USERNAME}\", 
-            password: \"${REGISTRY_PASSWORD}\" 
+        ${IOTHUB_E2E_REPO_USER}: { 
+            address: \"${IOTHUB_E2E_REPO_ADDRESS}\", 
+            username: \"${IOTHUB_E2E_REPO_USER}\", 
+            password: \"${IOTHUB_E2E_REPO_PASSWORD}\" 
         }
     }
 EOF

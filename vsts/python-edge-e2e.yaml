@@ -54,16 +54,7 @@ jobs:
           az extension add --name azure-iot 
 
     - task: AzureCLI@2
-      displayName: Get container repository credentials
-      inputs:
-        azureSubscription: 'ServiceConnectionDemo'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
-          az acr credential show --name $(containerRegistry) > $(credentialFile)
-
-    - task: AzureCLI@2
-      displayName: Create Edge Device ${{ variables.deviceId }}
+      displayName: Create and configure edge device{{ variables.deviceId }}
       inputs:
         azureSubscription: 'ServiceConnectionDemo'
         scriptType: bash
@@ -71,14 +62,6 @@ jobs:
         inlineScript: |
           echo Creating $(deviceId) 
           az iot hub device-identity create -n $(hubName) --device-id $(deviceId) --edge-enabled &> /dev/null
-
-    - task: AzureCLI@2
-      displayName: Configure Edge Device 
-      inputs:
-        azureSubscription: 'ServiceConnectionDemo'
-        scriptType: bash
-        scriptLocation: inlineScript
-        inlineScript: |
           cs = $(az iot hub device-identity connection-string show -d ${deviceId} -n ${hubName} --query "connectionString")
           sudo iotedge config mp --connection-string ${cs}
           sudo iotedge config apply
@@ -90,6 +73,7 @@ jobs:
         script: |
           cd $(ScriptDirectory)
           ./make-edge-manifest < "$(credentialFile)" > "$(manifestFile)
+        
 
     - task: AzureIoTEdge@2
       displayName: "Deploy to edge device"
