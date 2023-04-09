@@ -50,8 +50,8 @@ jobs:
         targetType: script
         script: |
           cd $(ScriptDirectory)
-          ./setup-moby.sh
-          ./setup-iotedge.sh
+          ./install-moby.sh
+          ./install-iotedge.sh
 
     - task: AzureCLI@2
       displayName: Create and configure edge device ${{ variables.deviceId }}

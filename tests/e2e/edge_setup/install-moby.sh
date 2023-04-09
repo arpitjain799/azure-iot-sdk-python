@@ -28,8 +28,8 @@ if [ "$need_moby" ]; then
 fi
 
 if [ "$need_moby" ]; then 
-  $script_dir/setup-microsoft-apt-repo.sh
-  [ $? -eq 0 ] || { echo "setup-microsoft-apt-repo failed"; exit 1; }
+  $script_dir/install-microsoft-apt-repo.sh
+  [ $? -eq 0 ] || { echo "install-microsoft-apt-repo failed"; exit 1; }
 
   echo "installing moby"
   sudo apt-get install -y moby-engine
