@@ -54,7 +54,7 @@ jobs:
           az extension add --name azure-iot 
 
     - task: AzureCLI@2
-      displayName: Create and configure edge device{{ variables.deviceId }}
+      displayName: Create and configure edge device ${{ variables.deviceId }}
       inputs:
         azureSubscription: 'ServiceConnectionDemo'
         scriptType: bash
