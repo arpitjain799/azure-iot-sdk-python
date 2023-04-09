@@ -33,15 +33,6 @@ jobs:
         versionSpec: '3.10'
         architecture: 'x64'
 
-    - task: Bash@3
-      displayName: 'Install IoT Edge'
-      inputs:
-        targetType: script
-        script: |
-          cd $(ScriptDirectory)
-          ./setup-moby.sh
-          ./setup-iotedge.sh
-
     - task: AzureCLI@2
       displayName: Update Azure CLI
       inputs:
@@ -53,6 +44,15 @@ jobs:
           az account show
           az extension add --name azure-iot 
 
+    - task: Bash@3
+      displayName: 'Install IoT Edge'
+      inputs:
+        targetType: script
+        script: |
+          cd $(ScriptDirectory)
+          ./setup-moby.sh
+          ./setup-iotedge.sh
+
     - task: AzureCLI@2
       displayName: Create and configure edge device ${{ variables.deviceId }}
       inputs:
@@ -63,8 +63,8 @@ jobs:
           echo Creating $(deviceId) 
           az iot hub device-identity create -n $(hubName) --device-id $(deviceId) --edge-enabled &> /dev/null
           CS=$(az iot hub device-identity connection-string show -d $(deviceId) -n $(hubName) --query "connectionString")
-          sudo iotedge config mp --connection-string $CS
-          sudo iotedge config apply
+          echo sudo iotedge config mp --connection-string $CS
+          echo sudo iotedge config apply
 
     - task: Bash@3
       displayName: create deployment manifest
