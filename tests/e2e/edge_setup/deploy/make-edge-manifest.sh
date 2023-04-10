@@ -1,6 +1,7 @@
 #
 # Scripe to create an IoT Edge deployment manifest from a template file
 #
+script_dir=$(cd "$(dirname "$0")" && pwd)
 
 
 #
@@ -40,16 +41,15 @@ EOF
 #
 # JSON for container retistry credentials
 #
-    read -d '' REGISTRY_BLOCK << EOF
-    {
-        ${IOTHUB_E2E_REPO_USER}: { 
-            address: \"${IOTHUB_E2E_REPO_ADDRESS}\", 
-            username: \"${IOTHUB_E2E_REPO_USER}\", 
-            password: \"${IOTHUB_E2E_REPO_PASSWORD}\" 
-        }
+read -d '' REGISTRY_BLOCK << EOF
+{
+    ${IOTHUB_E2E_REPO_USER}: { 
+        address: \"${IOTHUB_E2E_REPO_ADDRESS}\", 
+        username: \"${IOTHUB_E2E_REPO_USER}\", 
+        password: \"${IOTHUB_E2E_REPO_PASSWORD}\" 
     }
+}
 EOF
-fi
 
 #
 # function to format a route from a module output to a module input
@@ -79,7 +79,7 @@ EOF
 #
 # Use JQuery to populate the deployment manifest using the variables we set above.
 #
-cat deployment.template.json |\
+cat ${script_dir}/deployment.template.json |\
     jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.image = \"${DOCKER_IMAGE_EDGE_AGENT}\"" |\
     jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" |\
     jq "${PATH_MODULES} = {}" |\
