@@ -28,7 +28,6 @@ CS=$(az iot hub device-identity connection-string show -d ${DEVICE_ID} -n ${HUB_
 [ $? -eq 0 ] || { echo "az iot hub device-identity connection-string show failed"; exit 1; }
 
 echo Setting IoTHub configuration
-echo sudo -E iotedge config mp --connection-string __${CS}__
 sudo -E iotedge config mp --force --connection-string ${CS}
 [ $? -eq 0 ] || { echo "iotedge config mp failed"; exit 1; }
 
