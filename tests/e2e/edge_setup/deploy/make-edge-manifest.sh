@@ -81,13 +81,13 @@ EOF
 #
 cat ${script_dir}/deployment.template.json |\
     jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.image = \"${DOCKER_IMAGE_EDGE_AGENT}\"" |\
-    jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.createOptions = (${PATH_SYSTEM_MODULES}.edgeAgent.settings.createOptions | tojson)" |\
+    jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.createOptions |= tojson" |\
     jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" |\
-    jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.createOptions = (${PATH_SYSTEM_MODULES}.edgeHub.settings.createOptions | tojson)" |\
+    jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.createOptions |= tojson" |\
     jq "${PATH_MODULES} = {}" |\
     jq "${PATH_MODULES}.testMod = ${EMPTY_MODULE_BLOCK}" |\
     jq "${PATH_MODULES}.testMod.settings.image = \"${IOTHUB_E2E_REPO_ADDRESS}/default-friend-module:64-v2\"" |\
     jq "${PATH_REGISTRY_CREDENTIALS} = ${REGISTRY_BLOCK}" |\
     jq "${PATH_ROUTES} = ${ROUTE_BLOCK}" |\
-    jq "${PATH_MODULES}.testMod.settings.createOptions = (${PATH_MODULES}.testMod.settings.createOptions | tojson)"
+    jq "${PATH_MODULES}.testMod.settings.createOptions |= tojson"
 
