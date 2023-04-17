@@ -9,7 +9,6 @@
             "minDockerVersion": "v1.25",
             "loggingOptions": "",
             "registryCredentials": {}
-            }
           }
         },
         "systemModules": {
@@ -37,7 +36,17 @@
             "status": "running",
             "restartPolicy": "always",
             "settings": {
-              "image": "TODO"
+              "image": "TODO",
+              "createOptions": "{}"
+            }
+          },
+          "echoMod": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "TODO",
               "createOptions": "{}"
             }
           }
