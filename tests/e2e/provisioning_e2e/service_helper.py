@@ -9,9 +9,8 @@ from provisioning_e2e.iothubservice20180630.iot_hub_gateway_service_ap_is2018063
 )
 
 from msrest.exceptions import HttpOperationError
-from azure.iot.device.common.auth.connection_string import ConnectionString
-from azure.iot.device.common.auth.sastoken import RenewableSasToken
-from azure.iot.device.common.auth.signing_mechanism import SymmetricKeySigningMechanism
+from .connection_string import ConnectionString
+from .sastoken import SasToken
 import uuid
 import time
 import random
@@ -27,10 +26,9 @@ def connection_string_to_sas_token(conn_str):
     signature that can be used to connect to the given hub
     """
     conn_str_obj = ConnectionString(conn_str)
-    signing_mechanism = SymmetricKeySigningMechanism(conn_str_obj.get("SharedAccessKey"))
-    sas_token = RenewableSasToken(
+    sas_token = SasToken(
         uri=conn_str_obj.get("HostName"),
-        signing_mechanism=signing_mechanism,
+        key=conn_str_obj.get("SharedAccessKey"),
         key_name=conn_str_obj.get("SharedAccessKeyName"),
     )
 
