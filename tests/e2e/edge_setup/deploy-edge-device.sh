@@ -6,6 +6,12 @@ script_dir=$(cd "$(dirname "$0")" && pwd)
 DEVICE_ID=$1
 HUB_NAME=$2
 
+if [ "${DEVICE_ID}" == "" ] || [ "${HUB_NAME}" == "" ]; then
+    echo Usage: $0 deviceId hubName
+    echo    hubName is without '.azure-devices.net' suffix
+    exit 1
+fi
+
 TEMP_LOCATION=${SYSTEM_DEFAULTWORKINGDIRECTORY}
 if [ "${TEMP_LOCATION}" == "" ]; then
     TEMP_LOCATION=/tmp
