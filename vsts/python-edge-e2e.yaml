@@ -7,9 +7,6 @@ variables:
   credentialFile: $(System.DefaultWorkingDirectory)/creds.json
   manifestFile: $(System.DefaultWorkingDirectory)/manifest.json
   scriptDirectory: $(Build.SourcesDirectory)/tests/e2e/edge_setup 
-  IOTHUB_E2E_REPO_ADDRESS: $(IOTHUB-E2E-REPO-ADDRESS)
-  IOTHUB_E2E_REPO_USER: $(IOTHUB-E2E-REPO-USER)
-  IOTHUB_E2E_REPO_PASSWORD: $(IOTHUB-E2E-REPO-PASSWORD)
 
 jobs:
 - job: 'Test'
@@ -49,9 +46,12 @@ jobs:
       inputs:
         azureSubscription: 'ServiceConnectionDemo'
         scriptType: bash
-        scriptLocation: scriptPath
-        scriptPath: $(scriptDirectory)/deploy-edge-device.sh
-        arguments: $(deviceId) $(hubName)
+        scriptLocation: inlineScript
+        inlineScript: |
+          export IOTHUB_E2E_REPO_ADDRESS=$(IOTHUB-E2E-REPO-ADDRESS)
+          export IOTHUB_E2E_REPO_USER=$(IOTHUB-E2E-REPO-USER)
+          export IOTHUB_E2E_REPO_PASSWORD=$(IOTHUB-E2E-REPO-PASSWORD)
+          $(scriptDirectory)/deploy-edge-device.sh $(deviceId) $(hubName)
 
     - task: Bash@3
       displayName: "wait for container to start"
