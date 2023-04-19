@@ -42,8 +42,6 @@ sudo iotedge config apply
 
 echo Creating deployment manifest
 ${script_dir}/deploy/make-edge-manifest.sh > "${MANIFEST_LOCATION}"
-cat ${MANIFEST_LOCATION}
-exit 1
 [ $? -eq 0 ] || { echo "make-edge-manifest failed"; exit 1; }
 
 echo Applying deployment manifest

@@ -1,9 +1,6 @@
 #
 # Scripe to create an IoT Edge deployment manifest from a template file
 #
-# set -ex
-# trap 'echo ERROR on line ${LINENO}' ERR
-
 script_dir=$(cd "$(dirname "$0")" && pwd)
 
 
@@ -41,11 +38,10 @@ EOF
 #
 # Use JQuery to populate the deployment manifest using the variables we set above.
 #
-
-# cat ${script_dir}/deployment.template.json |\
-    echo jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.image = \"${DOCKER_IMAGE_EDGE_AGENT}\"" 
-    echo jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" 
-    echo jq "${PATH_MODULES}.echoMod.settings.image = \"${IOTHUB_E2E_REPO_ADDRESS}/default-friend-module\"" 
-    echo jq "${PATH_MODULES}.testMod.settings.image = \"${IOTHUB_E2E_REPO_ADDRESS}/default-friend-module\"" 
-    echo jq "${PATH_REGISTRY_CREDENTIALS} = ${REGISTRY_BLOCK}" 
+cat ${script_dir}/deployment.template.json |\
+    jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.image = \"${DOCKER_IMAGE_EDGE_AGENT}\"" |\
+    jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" |\
+    jq "${PATH_MODULES}.echoMod.settings.image = \"${IOTHUB_E2E_REPO_ADDRESS}/default-friend-module\"" |\
+    jq "${PATH_MODULES}.testMod.settings.image = \"${IOTHUB_E2E_REPO_ADDRESS}/default-friend-module\"" |\
+    jq "${PATH_REGISTRY_CREDENTIALS} = ${REGISTRY_BLOCK}" 
 
