@@ -54,7 +54,8 @@ jobs:
           $(scriptDirectory)/deploy-edge-device.sh $(deviceId) $(hubName)
 
     - task: Bash@3
-      displayName: "wait for container to start"
+      displayName: "Wait for container to start"
+      timeoutInMinutes: 15
       inputs:
         targetType: script
         script: |
@@ -63,6 +64,7 @@ jobs:
           ./wait-for-container.sh edgeHub
           ./wait-for-container.sh testMod
           ./wait-for-container.sh echoMod
+          ./wait-for-container.sh failureMod
           docker ps
 
     - task: AzureCLI@2
