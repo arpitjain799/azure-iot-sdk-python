@@ -59,6 +59,8 @@ jobs:
         targetType: script
         script: |
           cd $(ScriptDirectory)
+          ./wait-for-container.sh edgeAgent
+          ./wait-for-container.sh edgeHub
           ./wait-for-container.sh testMod
           ./wait-for-container.sh echoMod
           docker ps
