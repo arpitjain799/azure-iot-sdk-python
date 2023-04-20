@@ -59,7 +59,7 @@ jobs:
         targetType: script
         script: |
           cd $(ScriptDirectory)
-          ./wait-for-container testMod
+          ./wait-for-container.sh testMod
 
     - task: AzureCLI@2
       displayName: Remove Edge Device ${{ variables.deviceId }}
