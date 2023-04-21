@@ -3,11 +3,11 @@
 
 script_dir=$(cd "$(dirname "$0")" && pwd)
 
-$script_dir/prereqs/install-azure-cli.sh
+$script_dir/install-azure-cli.sh
 [ $? -eq 0 ] || { echo "install-azure-cli.sh failed"; exit 1; }
 
-$script_dir/prereqs/install-moby.sh
+$script_dir/install-moby.sh
 [ $? -eq 0 ] || { echo "install-moby.sh failed"; exit 1; }
 
-$script_dir/prereqs/install-iotedge.sh
+$script_dir/install-iotedge.sh
 [ $? -eq 0 ] || { echo "install-moby.sh failed"; exit 1; }

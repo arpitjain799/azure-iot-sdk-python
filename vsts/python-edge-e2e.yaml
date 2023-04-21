@@ -6,7 +6,7 @@ variables:
   containerRegistry: iotsdke2e
   credentialFile: $(System.DefaultWorkingDirectory)/creds.json
   manifestFile: $(System.DefaultWorkingDirectory)/manifest.json
-  scriptDirectory: $(Build.SourcesDirectory)/tests/e2e/edge_setup 
+  scriptDirectory: $(Build.SourcesDirectory)/scripts/edge_setup 
 
 jobs:
 - job: 'Test'
