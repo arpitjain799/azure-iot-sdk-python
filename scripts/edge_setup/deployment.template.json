@@ -58,8 +58,8 @@
             "settings": {
               "image": "TODO",
               "createOptions": {
-                "Path": "python3",
-                "Args": [
+                "Entrypoint": [
+                  "python3",
                   "-uc",
                   "import time; print('waiting'); time.sleep(3600);"
                 ]
@@ -74,8 +74,8 @@
             "settings": {
               "image": "TODO",
               "createOptions": {
-                "Path": "python3",
-                "Args": [
+                "Entrypoint": [
+                  "python3",
                   "-uc",
                   "import time; print('waiting'); time.sleep(3600);"
                 ]
