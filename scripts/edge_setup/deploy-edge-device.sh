@@ -22,11 +22,11 @@ echo "Storing manifest in ${MANIFEST_LOCATION}"
 echo Creating device ${DEVICE_ID} on hub ${HUB_NAME}
 TEMPFILE=$(mktemp)
 az iot hub device-identity create -n ${HUB_NAME} --device-id ${DEVICE_ID} --edge-enabled &> ${TEMPFILE}
-if [ $? -ne 0 ]; then 
+if [ $? -ne 0 ]; then
     echo "az iot hub device-identity create failed"
     cat ${TEMPFILE}
     rm ${TEMPFILE}
-    exit 1; 
+    exit 1;
 fi
 
 echo Getting connection string for ${DEVICE_ID} on ${HUB_NAME}

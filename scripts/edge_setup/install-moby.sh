@@ -15,10 +15,10 @@ if [ $? -eq 0 ]; then moby_engine_installed=true; fi
 need_moby=true
 if [ $moby_engine_installed ] && [ $moby_cli_installed ]; then
   echo "moby is already installed"
-  unset need_moby 
+  unset need_moby
 fi
 
-if [ "$need_moby" ]; then 
+if [ "$need_moby" ]; then
   echo "checking for docker install"
   which docker > /dev/null
   if [ $? -eq 0 ]; then
@@ -27,7 +27,7 @@ if [ "$need_moby" ]; then
   fi
 fi
 
-if [ "$need_moby" ]; then 
+if [ "$need_moby" ]; then
   $script_dir/install-microsoft-apt-repo.sh
   [ $? -eq 0 ] || { echo "install-microsoft-apt-repo failed"; exit 1; }
 

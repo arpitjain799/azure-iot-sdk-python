@@ -27,10 +27,10 @@ PATH_ROUTES="${PATH_HUB_PROPS}.routes"
 #
 read -d '' REGISTRY_BLOCK << EOF
 {
-    ${IOTHUB_E2E_REPO_USER}: { 
-        address: \"${IOTHUB_E2E_REPO_ADDRESS}\", 
-        username: \"${IOTHUB_E2E_REPO_USER}\", 
-        password: \"${IOTHUB_E2E_REPO_PASSWORD}\" 
+    ${IOTHUB_E2E_REPO_USER}: {
+        address: \"${IOTHUB_E2E_REPO_ADDRESS}\",
+        username: \"${IOTHUB_E2E_REPO_USER}\",
+        password: \"${IOTHUB_E2E_REPO_PASSWORD}\"
     }
 }
 EOF
@@ -43,5 +43,5 @@ cat ${script_dir}/deployment.template.json |\
     jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" |\
     jq "${PATH_MODULES}.echoMod.settings.image = \"mcr.microsoft.com/mirror/docker/library/python:3.10-slim-buster\"" |\
     jq "${PATH_MODULES}.testMod.settings.image = \"mcr.microsoft.com/mirror/docker/library/python:3.10-slim-buster\"" |\
-    jq "${PATH_REGISTRY_CREDENTIALS} = ${REGISTRY_BLOCK}" 
+    jq "${PATH_REGISTRY_CREDENTIALS} = ${REGISTRY_BLOCK}"
 

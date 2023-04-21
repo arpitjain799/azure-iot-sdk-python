@@ -6,7 +6,7 @@ source /etc/os-release
 
 
 echo "Checking for Microsoft APT repo registration"
-if [ -f /etc/apt/sources.list.d/microsoft-prod.list ]; then 
+if [ -f /etc/apt/sources.list.d/microsoft-prod.list ]; then
   echo "Microsoft APT repo already registered.  Done."
   exit 0
 fi
@@ -31,7 +31,7 @@ case $ID in
     raspbian)
         if [ "$VERSION_CODENAME" == "bullseye" ] || [ "$VERSION_ID" == "11" ];
         then
-            os_platform="$ID_LIKE/11"               
+            os_platform="$ID_LIKE/11"
         else
             os_platform="$ID_LIKE/stretch/multiarch"
         fi
