@@ -43,5 +43,9 @@ cat ${script_dir}/deployment.template.json |\
     jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.image = \"${DOCKER_IMAGE_EDGE_HUB}\"" |\
     jq "${PATH_MODULES}.echoMod.settings.image = \"mcr.microsoft.com/mirror/docker/library/python:3.10-slim-buster\"" |\
     jq "${PATH_MODULES}.testMod.settings.image = \"mcr.microsoft.com/mirror/docker/library/python:3.10-slim-buster\"" |\
+    jq "${PATH_SYSTEM_MODULES}.edgeAgent.settings.createOptions |= tojson" |\
+    jq "${PATH_SYSTEM_MODULES}.edgeHub.settings.createOptions |= tojson" |\
+    jq "${PATH_MODULES}.echoMod.settings.createOptions |= tojson" |\
+    jq "${PATH_MODULES}.testMod.settings.createOptions |= tojson" |\
     jq "${PATH_REGISTRY_CREDENTIALS} = ${REGISTRY_BLOCK}"
 
