@@ -64,7 +64,6 @@ jobs:
           ./wait-for-container.sh edgeHub
           ./wait-for-container.sh testMod
           ./wait-for-container.sh echoMod
-          ./wait-for-container.sh failureMod
           docker ps
 
     - task: AzureCLI@2
